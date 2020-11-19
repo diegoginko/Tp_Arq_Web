@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
         const notes = await Note.find();
         res.status(200).json(notes);
     } catch (err){
-        res.status(404).json({ message: err});
+        res.status(500).json({ message: err});
     }
 });
 
@@ -18,7 +18,7 @@ router.get('/:noteId', async (req, res) => {
         const note = await Note.findById(req.params.noteId);
         res.status(200).json(note);
     } catch (err){
-        res.status(404).json({ message: err});
+        res.status(500).json({ message: err});
     }
 });
 
@@ -32,7 +32,7 @@ router.post('/', async (req, res) => {
         const savedNote = await note.save();
         res.status(200).json(savedNote);
     } catch (err){
-        res.status(404).json({ message: err});
+        res.status(500).json({ message: err});
     }
 });
 
@@ -45,7 +45,7 @@ router.patch('/:noteId', async (req, res) => {
         });
         res.status(200).json(updatedNote);
     } catch (err){
-        res.status(404).json({ message: err});
+        res.status(500).json({ message: err});
     }
 });
 
@@ -55,7 +55,7 @@ router.delete('/:noteId', async (req, res) => {
         const removedNote = await Note.remove({_id: req.params.noteId});
         res.status(200).json(removedNote);
     } catch (err){
-        res.status(404).json({ message: err});
+        res.status(500).json({ message: err});
     }
 });
 
