@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Note = require('../models/Note');
 const verify = require('./verifyToken');
+const { noteValidation } = require('../validation');
 
 //Get ALL
 router.get('/', verify, async (req, res) => {
@@ -25,10 +26,14 @@ router.get('/:noteId', verify, async (req, res) => {
 
 //Creo una nota
 router.post('/', verify, async (req, res) => {
+    const { error } = noteValidation(req.body);
+    if ( error ) return res.status(400).send(error.details[0].message);
+    
     const note = new Note({
         title: req.body.title,
         description: req.body.description,
-        user: req.user._id
+        user: req.user._id,
+        tag: req.body.tag
     });
     try{
         const savedNote = await note.save();
@@ -40,10 +45,13 @@ router.post('/', verify, async (req, res) => {
 
 //Edito una nota
 router.patch('/:noteId', verify, async (req, res) => {
+    const { error } = noteValidation(req.body);
+    if ( error ) return res.status(400).send(error.details[0].message);
+
     try{
         const updatedNote = await Note.updateOne(
             {_id: req.params.noteId, user: req.user._id},
-            { $set: { title: req.body.title, description: req.body.description}
+            { $set: { title: req.body.title, description: req.body.description, tag: req.body.tag}
         });
         res.status(200).json(updatedNote);
     } catch (err){

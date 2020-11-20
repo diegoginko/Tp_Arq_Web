@@ -19,6 +19,17 @@ const loginValidation = data => {
     return userSchema.validate(data);
 };
 
+const noteValidation = data => {
+    const noteSchema = Joi.object({
+        title: Joi.string().required(),
+        description: Joi.string().required(),
+        tag: Joi.string().required()
+    });
+
+    return noteSchema.validate(data);
+};
+
 module.exports.registerValidation = registerValidation;
 module.exports.loginValidation = loginValidation;
+module.exports.noteValidation = noteValidation;
 
