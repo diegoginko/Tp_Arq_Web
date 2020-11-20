@@ -14,11 +14,22 @@ router.get('/', verify, async (req, res) => {
     }
 });
 
+
 //Get by Id
 router.get('/:noteId', verify, async (req, res) => {
     try{
         const note = await Note.findById(req.params.noteId);
         res.status(200).json(note);
+    } catch (err){
+        res.status(500).json({ message: err});
+    }
+});
+
+//Get by TAG
+router.get('/tag/:tag', verify, async (req, res) => {
+    try{
+        const notes = await Note.find({user: req.user._id, tag: req.params.tag});
+        res.status(200).json(notes);
     } catch (err){
         res.status(500).json({ message: err});
     }

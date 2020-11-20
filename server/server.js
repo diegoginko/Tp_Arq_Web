@@ -15,8 +15,8 @@ const notesRoute = require('./routes/notes');
 app.use(bodyParser.json());   //Usa bodyparser para todas las rutas
 
 //Routes
-app.use('/auth', authRoute);
-app.use('/notes', notesRoute);
+app.use('/v1/auth', authRoute);
+app.use('/v1/notes', notesRoute);
 
 
 //Conectar a la DB
