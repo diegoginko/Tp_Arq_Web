@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const Note = require('../models/Note');
+const verify = require('./verifyToken');
 
 //Get ALL
-router.get('/', async (req, res) => {
+router.get('/', verify, async (req, res) => {
     try{
-        const notes = await Note.find();
+        const notes = await Note.find({user: req.user._id});
         res.status(200).json(notes);
     } catch (err){
         res.status(500).json({ message: err});
@@ -13,7 +14,7 @@ router.get('/', async (req, res) => {
 });
 
 //Get by Id
-router.get('/:noteId', async (req, res) => {
+router.get('/:noteId', verify, async (req, res) => {
     try{
         const note = await Note.findById(req.params.noteId);
         res.status(200).json(note);
@@ -23,10 +24,11 @@ router.get('/:noteId', async (req, res) => {
 });
 
 //Creo una nota
-router.post('/', async (req, res) => {
+router.post('/', verify, async (req, res) => {
     const note = new Note({
         title: req.body.title,
-        description: req.body.description
+        description: req.body.description,
+        user: req.user._id
     });
     try{
         const savedNote = await note.save();
@@ -37,10 +39,10 @@ router.post('/', async (req, res) => {
 });
 
 //Edito una nota
-router.patch('/:noteId', async (req, res) => {
+router.patch('/:noteId', verify, async (req, res) => {
     try{
         const updatedNote = await Note.updateOne(
-            {_id: req.params.noteId},
+            {_id: req.params.noteId, user: req.user._id},
             { $set: { title: req.body.title, description: req.body.description}
         });
         res.status(200).json(updatedNote);
@@ -50,33 +52,14 @@ router.patch('/:noteId', async (req, res) => {
 });
 
 //Borro nota por id
-router.delete('/:noteId', async (req, res) => {
+router.delete('/:noteId', verify, async (req, res) => {
     try{
-        const removedNote = await Note.remove({_id: req.params.noteId});
+        const removedNote = await Note.remove({_id: req.params.noteId, user: req.user._id});
         res.status(200).json(removedNote);
     } catch (err){
         res.status(500).json({ message: err});
     }
 });
 
-/* router.get('/', (req, res) => {
-    res.send('Hola desde notas!')
-}); */
-
-/* router.post('/', (req, res) => {
-    //console.log(req.body);
-    const note = new Note({
-        title: req.body.title,
-        description: req.body.description
-    });
-
-    note.save()
-    .then(data => {
-        res.status(200).json(data);
-    }) //Devuelve lo que se grabo
-    .catch(err => {
-        res.status(404).json({ message: err});
-    }); //Si hubo erro, devuelvo el error
-}); */
 
 module.exports = router;

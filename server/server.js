@@ -8,14 +8,14 @@ const bodyParser = require('body-parser');  //Parsea a JSON
 require('dotenv/config');   //Permite poner los string de conexion y claves como variables de entorno en .env
 
 //Importo las rutas
-const usersRoute = require('./routes/users');
+const authRoute = require('./routes/auth');
 const notesRoute = require('./routes/notes');
 
 //Middleware
 app.use(bodyParser.json());   //Usa bodyparser para todas las rutas
 
 //Routes
-app.use('/users', usersRoute);
+app.use('/auth', authRoute);
 app.use('/notes', notesRoute);
 
 

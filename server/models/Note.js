@@ -9,6 +9,14 @@ const NoteSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    user: {
+        type: String,
+        required: true
+    },
+    tag: {
+        type: String,
+        required: false
+    },
     date: {
         type: Date,
         default: Date.now
